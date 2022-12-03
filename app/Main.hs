@@ -1,8 +1,9 @@
 module Main where
 
-import Data.List (sort)
+import Data.List (foldl1', intersect, sort)
 
 import P2
+import P3
 import Util
 
 main :: IO ()
@@ -40,3 +41,25 @@ p2_2 = p2 (\[opponent, me] -> helper (readRPS opponent) (readOutcome me))
   where
     helper :: RPS -> Outcome -> Int
     helper opponent me = rpsSelect opponent me % rpsRound opponent
+
+--------------------------------------------------------------------------------
+
+p3_1 :: IO Int
+p3_1 =
+  input 3
+  & lines
+  & map (\l ->
+    splitAt (length l `div` 2) l
+    % uncurry intersect
+    % head
+    % priority
+  )
+  & sum
+
+p3_2 :: IO Int
+p3_2 =
+  input 3
+  & lines
+  & chunksOf 3
+  & map (foldl1' intersect & head & priority)
+  & sum
