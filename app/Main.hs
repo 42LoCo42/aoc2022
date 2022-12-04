@@ -74,7 +74,7 @@ p4 f =
     splitWhen (== ',')
     & concatMap (
       splitWhen (== '-')
-      & map (read :: String -> Int)
+      & map read
     )
     & \[a, b, c, d] -> f (a, b, c, d)
   )
