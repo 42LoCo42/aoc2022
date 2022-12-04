@@ -63,3 +63,26 @@ p3_2 =
   & chunksOf 3
   & map (foldl1' intersect & head & priority)
   & sum
+
+--------------------------------------------------------------------------------
+
+p4 :: ((Int, Int, Int, Int) -> Bool) -> IO Int
+p4 f =
+  input 4
+  & lines
+  & map (
+    splitWhen (== ',')
+    & concatMap (
+      splitWhen (== '-')
+      & map (read :: String -> Int)
+    )
+    & \[a, b, c, d] -> f (a, b, c, d)
+  )
+  & filter (== True)
+  & length
+
+p4_1 :: IO Int
+p4_1 = p4 (\(a, b, c, d) -> (a <= c && b >= d) || (c <= a && d >= b))
+
+p4_2 :: IO Int
+p4_2 = p4 (\(a, b, c, d) -> intersect [a..b] [c..d] % null % not)
