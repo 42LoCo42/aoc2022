@@ -4,6 +4,7 @@ import Data.List (foldl1', intersect, sort)
 
 import P2
 import P3
+import P5
 import Util
 
 main :: IO ()
@@ -86,3 +87,23 @@ p4_1 = p4 (\(a, b, c, d) -> (a <= c && b >= d) || (c <= a && d >= b))
 
 p4_2 :: IO Int
 p4_2 = p4 (\(a, b, c, d) -> intersect [a..b] [c..d] % null % not)
+
+--------------------------------------------------------------------------------
+
+p5 :: ([Crate] -> [Crate]) -> IO [Crate]
+p5 f = do
+  [crateLines, _:commandLines] <-
+    input 5
+    & lines
+    & splitWhen (take 2 & (== " 1")) -- split at stack index line
+
+  let crates   = parseCrates   crateLines
+  let commands = parseCommands commandLines
+
+  runCommands f crates commands % map head % return
+
+p5_1 :: IO [Crate]
+p5_1 = p5 reverse
+
+p5_2 :: IO [Crate]
+p5_2 = p5 id

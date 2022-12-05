@@ -25,3 +25,10 @@ iterUpdate f a = b : iterUpdate f a'
 
 chunksOf :: Int -> [x] -> [[x]]
 chunksOf len = iterUpdate (splitAt len) & takeWhile (not . null)
+
+setAt :: Int -> x -> [x] -> [x]
+setAt 0 x (_:t) = x:t
+setAt n x xs@(h:t)
+  | n < 0     = xs
+  | otherwise = h : setAt (n - 1) x t
+setAt _ _ [] = []

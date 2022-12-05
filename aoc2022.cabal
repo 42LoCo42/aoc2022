@@ -4,7 +4,7 @@ version:            0.1.0.0
 
 executable aoc2022
     main-is:          Main.hs
-    other-modules:    Util
+    other-modules:    Util P2 P3 P5
     other-extensions:
     build-depends:    base ^>=4.14.3.0
     hs-source-dirs:   app
