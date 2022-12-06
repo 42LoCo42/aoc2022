@@ -1,6 +1,7 @@
 module Util where
 
 import Data.Functor ((<&>))
+import Data.List    (group, sort)
 import Text.Printf  (printf)
 
 infixl 8 &
@@ -32,3 +33,13 @@ setAt n x xs@(h:t)
   | n < 0     = xs
   | otherwise = h : setAt (n - 1) x t
 setAt _ _ [] = []
+
+uniq :: Ord a => [a] -> [a]
+uniq = sort & group & map head
+
+slidingWindow :: Int -> [x] -> [[x]]
+slidingWindow len xs@(_:t)
+  | length window == len = window : slidingWindow len t
+  | otherwise            = []
+  where window = take len xs
+slidingWindow _ [] = []

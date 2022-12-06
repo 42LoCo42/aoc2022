@@ -1,6 +1,7 @@
 module Main where
 
-import Data.List (foldl1', intersect, sort)
+import Data.List  (elemIndex, foldl1', intersect, sort)
+import Data.Maybe (fromJust)
 
 import P2
 import P3
@@ -107,3 +108,20 @@ p5_1 = p5 reverse
 
 p5_2 :: IO [Crate]
 p5_2 = p5 id
+
+--------------------------------------------------------------------------------
+
+p6 :: Int -> IO Int
+p6 size =
+  input 6
+  & slidingWindow size
+  & map (uniq & length)
+  & elemIndex size
+  & fromJust
+  & (+ size) -- position is after marker
+
+p6_1 :: IO Int
+p6_1 = p6 4
+
+p6_2 :: IO Int
+p6_2 = p6 14
