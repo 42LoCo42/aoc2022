@@ -6,6 +6,8 @@ import Data.Maybe (fromJust)
 import P2
 import P3
 import P5
+import P7
+import Stream
 import Util
 
 main :: IO ()
@@ -125,3 +127,26 @@ p6_1 = p6 4
 
 p6_2 :: IO Int
 p6_2 = p6 14
+
+--------------------------------------------------------------------------------
+
+p7 :: IO File
+p7 =
+  input 7
+  & lines
+  & runStream parse
+  & snd
+
+p7_1 :: IO Integer
+p7_1 =
+  p7
+  & dirs
+  & map fileSize
+  & filter (<= 100000)
+  & sum
+
+p7_2 :: IO Integer
+p7_2 = do
+  root <- p7
+  let needs = fileSize root - 40000000
+  dirs root % map fileSize % filter (>= needs) % sort % head % pure
