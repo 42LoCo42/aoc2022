@@ -43,3 +43,14 @@ slidingWindow len xs@(_:t)
   | otherwise            = []
   where window = take len xs
 slidingWindow _ [] = []
+
+foldUpdR :: (a -> b -> (b, c)) -> b -> [a] -> [c]
+foldUpdR f b0 = foldr (\a (b, cs) ->
+  let (b1, c) = f a b in (b1, c:cs)) (b0, []) & snd
+
+zipWith2D :: (a -> b -> c) -> [[a]] -> [[b]] -> [[c]]
+zipWith2D = zipWith . zipWith
+
+takeWhile' :: (a -> Bool) -> [a] -> [a]
+takeWhile' _ []    = []
+takeWhile' f (h:t) = h : if f h then takeWhile' f t else []

@@ -7,6 +7,7 @@ import P2
 import P3
 import P5
 import P7
+import P8
 import Stream
 import Util
 
@@ -150,3 +151,24 @@ p7_2 = do
   root <- p7
   let needs = fileSize root - 40000000
   dirs root % map fileSize % filter (>= needs) % sort % head % pure
+
+--------------------------------------------------------------------------------
+
+p8 :: ([Int] -> [a]) -> (a -> a -> a) -> IO [a]
+p8 rowFunc cellFunc =
+  input 8
+  & lines
+  & map (map ((:[]) & (read :: String -> Int)))
+  & runOnGrid rowFunc cellFunc
+  & concat
+
+p8_1 :: IO Int
+p8_1 =
+  p8 visibilityR (||)
+  & filter id
+  & length
+
+p8_2 :: IO Int
+p8_2 =
+  p8 viewDists (*)
+  & maximum
