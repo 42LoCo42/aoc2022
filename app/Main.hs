@@ -1,6 +1,6 @@
 module Main where
 
-import Data.List  (elemIndex, foldl1', intersect, sort)
+import Data.List  (elemIndex, foldl1', intersect, scanl', sort)
 import Data.Maybe (fromJust)
 
 import P2
@@ -8,6 +8,7 @@ import P3
 import P5
 import P7
 import P8
+import P9
 import Stream
 import Util
 
@@ -158,7 +159,7 @@ p8 :: ([Int] -> [a]) -> (a -> a -> a) -> IO [a]
 p8 rowFunc cellFunc =
   input 8
   & lines
-  & map (map ((:[]) & (read :: String -> Int)))
+  & map (map ((:[]) & read))
   & runOnGrid rowFunc cellFunc
   & concat
 
@@ -172,3 +173,23 @@ p8_2 :: IO Int
 p8_2 =
   p8 viewDists (*)
   & maximum
+
+--------------------------------------------------------------------------------
+
+p9 :: Int -> IO Int
+p9 pointCount =
+  input 9
+  & lines
+  & concatMap parseMovement
+  & scanl'
+    (flip runMovementR)
+    (Pos2D 0 0 % replicate pointCount)
+  & map head
+  & uniq
+  & length
+
+p9_1 :: IO Int
+p9_1 = p9 2
+
+p9_2 :: IO Int
+p9_2 = p9 10
