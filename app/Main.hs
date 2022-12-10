@@ -193,3 +193,36 @@ p9_1 = p9 2
 
 p9_2 :: IO Int
 p9_2 = p9 10
+
+--------------------------------------------------------------------------------
+
+p10 :: IO [Int]
+p10 =
+  input 10
+  & lines
+  & concatMap (words & \op ->
+    case length op of
+      1 -> [0]
+      2 -> [0, op !! 1 % read]
+      _ -> error "Invalid operation"
+  )
+  & scanl' (+) 1
+
+p10_1 :: IO Int
+p10_1 =
+  p10
+  & drop 19
+  & zip [0..]
+  & filter (fst & (`mod` 40) & (== 0))
+  & map (\(cyc, x) -> (cyc + 20) * x)
+  & sum
+
+p10_2 :: IO ()
+p10_2 =
+  p10
+  & zipWith (\crt x ->
+    if abs (crt - x) <= 1 then '█' else ' '
+  ) (cycle [0..39])
+  & chunksOf 40
+  & unlines
+  >>= putStrLn

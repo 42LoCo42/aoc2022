@@ -3,10 +3,7 @@ module P9 where
 import Util
 
 data Pos2D
-  = Pos2D
-    { x :: Int
-    , y :: Int
-    }
+  = Pos2D Int Int
   deriving (Eq, Ord, Show)
 
 addPos2D :: Pos2D -> Pos2D -> Pos2D
