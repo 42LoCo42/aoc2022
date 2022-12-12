@@ -1,8 +1,10 @@
 module Util where
 
-import Data.Functor ((<&>))
-import Data.List    (group, sort)
-import Text.Printf  (printf)
+import Data.Functor          ((<&>))
+import Data.Functor.Identity (Identity (runIdentity))
+import Data.IORef            (IORef, modifyIORef')
+import Data.List             (group, sort)
+import Text.Printf           (printf)
 
 infixl 8 &
 (&) :: Functor f => f a -> (a -> b) -> f b
@@ -28,11 +30,14 @@ chunksOf :: Int -> [x] -> [[x]]
 chunksOf len = iterUpdate (splitAt len) & takeWhile (not . null)
 
 setAt :: Int -> x -> [x] -> [x]
-setAt 0 x (_:t) = x:t
-setAt n x xs@(h:t)
-  | n < 0     = xs
-  | otherwise = h : setAt (n - 1) x t
-setAt _ _ [] = []
+setAt n x = updateAt n (pure x % const) & runIdentity
+
+updateAt :: Monad m => Int -> (x -> m x) -> [x] -> m [x]
+updateAt 0 f    (h:t) = f h & (: t)
+updateAt n f xs@(h:t)
+  | n < 0     = pure xs
+  | otherwise = updateAt (n - 1) f t & (h :)
+updateAt _ _ [] = pure []
 
 uniq :: Ord a => [a] -> [a]
 uniq = sort & group & map head
@@ -54,3 +59,6 @@ zipWith2D = zipWith . zipWith
 takeWhile' :: (a -> Bool) -> [a] -> [a]
 takeWhile' _ []    = []
 takeWhile' f (h:t) = h : if f h then takeWhile' f t else []
+
+updateRef :: (x -> x) -> IORef x -> IO (IORef x)
+updateRef f ref = modifyIORef' ref f >> pure ref

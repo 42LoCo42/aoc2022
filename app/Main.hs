@@ -1,8 +1,12 @@
 module Main where
 
-import Data.List  (elemIndex, foldl1', intersect, scanl', sort)
-import Data.Maybe (fromJust)
+import Control.Monad (replicateM_, (>=>))
+import Data.IORef    (readIORef)
+import Data.List     (elemIndex, foldl1', intersect, scanl', sort)
+import Data.Maybe    (fromJust)
 
+import Debug.Trace (traceShowId)
+import P11
 import P2
 import P3
 import P5
@@ -226,3 +230,24 @@ p10_2 =
   & chunksOf 40
   & unlines
   >>= putStrLn
+
+--------------------------------------------------------------------------------
+
+p11 :: Integer -> Int -> IO Integer
+p11 divisor rounds =
+  input 0
+  & lines
+  >>= parseMonkeys
+  >>= \monkeys -> replicateM_ rounds (runRound divisor monkeys)
+  >> mapM (readIORef >=> (mInspections & pure)) monkeys
+  & traceShowId
+  & sort
+  & reverse
+  & take 2
+  & product
+
+p11_1 :: IO Integer
+p11_1 = p11 3 20
+
+p11_2 :: IO Integer
+p11_2 = error "TODO" -- p11 1 10000
