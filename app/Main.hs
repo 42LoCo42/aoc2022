@@ -2,11 +2,12 @@ module Main where
 
 import Control.Monad (replicateM_, (>=>))
 import Data.IORef    (readIORef)
-import Data.List     (elemIndex, foldl1', intersect, scanl', sort)
+import Data.List     (elemIndex, findIndices, foldl1', intersect, scanl', sort)
 import Data.Maybe    (fromJust)
 
 import Debug.Trace (traceShowId)
 import P11
+import P13
 import P2
 import P3
 import P5
@@ -251,3 +252,37 @@ p11_1 = p11 3 20
 
 p11_2 :: IO Integer
 p11_2 = error "TODO" -- p11 1 10000
+
+--------------------------------------------------------------------------------
+
+p12 :: IO ()
+p12 = error "TODO"
+
+--------------------------------------------------------------------------------
+
+p13 :: IO [Packet]
+p13 =
+  input 13
+  & lines
+  & filter (not . null)
+  & map read
+
+p13_1 :: IO Int
+p13_1 =
+  p13
+  & chunksOf 2
+  & map (\[left, right] -> compare left right)
+  & zip [1..]
+  & filter (snd & (== LT))
+  & map fst
+  & sum
+
+p13_2 :: IO Int
+p13_2 =
+  p13
+  & (++) divider
+  & sort
+  & findIndices (`elem` divider)
+  & map (+1)
+  & product
+    where divider = ["[[2]]", "[[6]]"] % map read :: [Packet]

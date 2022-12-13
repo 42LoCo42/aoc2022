@@ -62,3 +62,12 @@ takeWhile' f (h:t) = h : if f h then takeWhile' f t else []
 
 updateRef :: (x -> x) -> IORef x -> IO (IORef x)
 updateRef f ref = modifyIORef' ref f >> pure ref
+
+flipOrder :: Ordering -> Ordering
+flipOrder LT = GT
+flipOrder EQ = EQ
+flipOrder GT = LT
+
+safeHead :: a -> [a] -> a
+safeHead a []    = a
+safeHead _ (h:_) = h
