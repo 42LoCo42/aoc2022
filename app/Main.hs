@@ -3,10 +3,11 @@ module Main where
 import Control.Monad (replicateM_, (>=>))
 import Data.IORef    (readIORef)
 import Data.List     (elemIndex, findIndices, foldl1', intersect, scanl', sort)
-import Data.Maybe    (fromJust)
+import Data.Maybe    (catMaybes, fromJust)
+import Debug.Trace   (traceShowId)
 
-import Debug.Trace (traceShowId)
 import P11
+import P12
 import P13
 import P2
 import P3
@@ -255,8 +256,23 @@ p11_2 = error "TODO" -- p11 1 10000
 
 --------------------------------------------------------------------------------
 
-p12 :: IO ()
-p12 = error "TODO"
+p12 :: Bool -> IO Int
+p12 useAllA =
+  input 12 >>=
+  parseHeightmap >>=
+  pathfind useAllA
+  & fmap (
+    catMaybes
+    & map length
+    & sort
+    & head
+  )
+
+p12_1 :: IO Int
+p12_1 = p12 False
+
+p12_2 :: IO Int
+p12_2 = p12 True
 
 --------------------------------------------------------------------------------
 
