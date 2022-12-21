@@ -9,6 +9,7 @@ import Debug.Trace   (traceShowId)
 import P11
 import P12
 import P13
+import P14
 import P2
 import P3
 import P5
@@ -264,8 +265,7 @@ p12 useAllA =
   & fmap (
     catMaybes
     & map length
-    & sort
-    & head
+    & minimum
   )
 
 p12_1 :: IO Int
@@ -302,3 +302,19 @@ p13_2 =
   & map (+1)
   & product
     where divider = ["[[2]]", "[[6]]"] % map read :: [Packet]
+
+--------------------------------------------------------------------------------
+
+p14 :: (Int -> Pos -> Bool) -> IO Int
+p14 contP =
+  input 14 >>=
+  parseRocks >>=
+  \state@(lowest, _) ->
+  fallOne (contP lowest) state
+  % whileM
+
+p14_1 :: IO Int
+p14_1 = p14 (\lowest (_, y) -> y <= lowest)
+
+p14_2 :: IO Int
+p14_2 = p14 (\_ pos -> pos /= (500, 0)) & (+1)

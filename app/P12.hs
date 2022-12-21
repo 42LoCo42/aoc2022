@@ -16,7 +16,6 @@ type Height = Int
 type Dist = Int
 type Cell = (Height, IORef Dist)
 type Heightmap = V.Vector (V.Vector Cell)
-type Pos = (Int, Int)
 data Dir = Up | Down | Left | Right deriving (Show)
 
 parseHeightmap :: String -> IO Heightmap

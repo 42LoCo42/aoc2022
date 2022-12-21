@@ -6,6 +6,8 @@ import Data.IORef            (IORef, modifyIORef')
 import Data.List             (group, sort)
 import Text.Printf           (printf)
 
+type Pos = (Int, Int)
+
 infixl 8 &
 (&) :: Functor f => f a -> (a -> b) -> f b
 (&) = (<&>)
@@ -71,3 +73,10 @@ flipOrder GT = LT
 safeHead :: a -> [a] -> a
 safeHead a []    = a
 safeHead _ (h:_) = h
+
+whileM :: Monad m => m Bool -> m Int
+whileM = helper 0
+  where
+    helper count m =
+      m >>= \b ->
+      if b then helper (count + 1) m else pure count
